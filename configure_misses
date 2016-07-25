@@ -1,0 +1,5 @@
+Configure miss: HP-UX -Aa
+Configure miss: yywrap in -lfl
+Configure miss: kstat_open in -lkstat
+Configure miss: whether getloadavg requires setgid
+Configure miss: location of spool directory
