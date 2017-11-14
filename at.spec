@@ -4,7 +4,7 @@
 #
 Name     : at
 Version  : 3.1.20
-Release  : 6
+Release  : 7
 URL      : http://localhost/cgit/projects/at/snapshot/at-3.1.20.tar.bz2
 Source0  : http://localhost/cgit/projects/at/snapshot/at-3.1.20.tar.bz2
 Source1  : atd.service
