@@ -4,16 +4,18 @@
 #
 Name     : at
 Version  : 3.1.20
-Release  : 10
+Release  : 11
 URL      : http://localhost/cgit/projects/at/snapshot/at-3.1.20.tar.bz2
 Source0  : http://localhost/cgit/projects/at/snapshot/at-3.1.20.tar.bz2
 Source1  : atd.service
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-2.0
-Requires: at-bin
-Requires: at-config
-Requires: at-doc
+Requires: at-bin = %{version}-%{release}
+Requires: at-license = %{version}-%{release}
+Requires: at-man = %{version}-%{release}
+Requires: at-services = %{version}-%{release}
+Requires: at-setuid = %{version}-%{release}
 BuildRequires : Linux-PAM-dev
 BuildRequires : bison
 BuildRequires : flex
@@ -28,26 +30,53 @@ specified time.  To install, do a
 %package bin
 Summary: bin components for the at package.
 Group: Binaries
-Requires: at-config
+Requires: at-setuid = %{version}-%{release}
+Requires: at-license = %{version}-%{release}
+Requires: at-services = %{version}-%{release}
 
 %description bin
 bin components for the at package.
 
 
-%package config
-Summary: config components for the at package.
-Group: Default
-
-%description config
-config components for the at package.
-
-
 %package doc
 Summary: doc components for the at package.
 Group: Documentation
+Requires: at-man = %{version}-%{release}
 
 %description doc
 doc components for the at package.
+
+
+%package license
+Summary: license components for the at package.
+Group: Default
+
+%description license
+license components for the at package.
+
+
+%package man
+Summary: man components for the at package.
+Group: Default
+
+%description man
+man components for the at package.
+
+
+%package services
+Summary: services components for the at package.
+Group: Systemd services
+
+%description services
+services components for the at package.
+
+
+%package setuid
+Summary: setuid components for the at package.
+Group: Default
+
+%description setuid
+setuid components for the at package.
 
 
 %prep
@@ -58,47 +87,74 @@ doc components for the at package.
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1510691482
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1565892524
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static --with-jobdir=/var/spool --with-atspool=/var/spool/atspool
-make V=1
+make
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make TEST_VERBOSE=1 test
 
 %install
-export SOURCE_DATE_EPOCH=1510691482
+export SOURCE_DATE_EPOCH=1565892524
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/at
+cp COPYING %{buildroot}/usr/share/package-licenses/at/COPYING
+cp Copyright %{buildroot}/usr/share/package-licenses/at/Copyright
 make install IROOT="%{buildroot}" docdir=/usr/share/doc
 mkdir -p %{buildroot}/usr/lib/systemd/system
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/systemd/system/atd.service
-## make_install_append content
+## install_append content
 rm "%{buildroot}/var/spool/.SEQ"
-## make_install_append end
+## install_append end
 
 %files
 %defattr(-,root,root,-)
 
 %files bin
 %defattr(-,root,root,-)
-/usr/bin/at
 /usr/bin/atd
 /usr/bin/atq
 /usr/bin/atrm
 /usr/bin/atrun
 /usr/bin/batch
 
-%files config
+%files doc
+%defattr(0644,root,root,0755)
+%doc /usr/share/doc/at/*
+
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/at/COPYING
+/usr/share/package-licenses/at/Copyright
+
+%files man
+%defattr(0644,root,root,0755)
+/usr/share/man/man1/at.1
+/usr/share/man/man1/atq.1
+/usr/share/man/man1/atrm.1
+/usr/share/man/man1/batch.1
+/usr/share/man/man5/at.allow.5
+/usr/share/man/man5/at.deny.5
+/usr/share/man/man8/atd.8
+/usr/share/man/man8/atrun.8
+
+%files services
 %defattr(-,root,root,-)
 /usr/lib/systemd/system/atd.service
 
-%files doc
+%files setuid
 %defattr(-,root,root,-)
-%doc /usr/share/doc/at/*
-%doc /usr/share/man/man1/*
-%doc /usr/share/man/man5/*
-%doc /usr/share/man/man8/*
+%attr(4755, root, root) /usr/bin/at
