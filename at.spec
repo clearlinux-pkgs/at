@@ -4,7 +4,7 @@
 #
 Name     : at
 Version  : 3.1.20
-Release  : 11
+Release  : 12
 URL      : http://localhost/cgit/projects/at/snapshot/at-3.1.20.tar.bz2
 Source0  : http://localhost/cgit/projects/at/snapshot/at-3.1.20.tar.bz2
 Source1  : atd.service
@@ -21,6 +21,7 @@ BuildRequires : bison
 BuildRequires : flex
 BuildRequires : flex-dev
 BuildRequires : msmtp
+BuildRequires : perl(Test::More)
 Patch1: 0001-Remove-owner-group-setting-on-install.patch
 
 %description
@@ -88,7 +89,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1565892524
+export SOURCE_DATE_EPOCH=1571440703
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -108,11 +109,11 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make TEST_VERBOSE=1 test
 
 %install
-export SOURCE_DATE_EPOCH=1565892524
+export SOURCE_DATE_EPOCH=1571440703
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/at
-cp COPYING %{buildroot}/usr/share/package-licenses/at/COPYING
-cp Copyright %{buildroot}/usr/share/package-licenses/at/Copyright
+cp %{_builddir}/at-3.1.20/COPYING %{buildroot}/usr/share/package-licenses/at/4d1d37f306ed270cda5b2741fac3abf0a7b012e5
+cp %{_builddir}/at-3.1.20/Copyright %{buildroot}/usr/share/package-licenses/at/fac3ce06c12ddc1a827b51cf0385cc5ef2046637
 make install IROOT="%{buildroot}" docdir=/usr/share/doc
 mkdir -p %{buildroot}/usr/lib/systemd/system
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/systemd/system/atd.service
@@ -137,8 +138,8 @@ rm "%{buildroot}/var/spool/.SEQ"
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/at/COPYING
-/usr/share/package-licenses/at/Copyright
+/usr/share/package-licenses/at/4d1d37f306ed270cda5b2741fac3abf0a7b012e5
+/usr/share/package-licenses/at/fac3ce06c12ddc1a827b51cf0385cc5ef2046637
 
 %files man
 %defattr(0644,root,root,0755)
