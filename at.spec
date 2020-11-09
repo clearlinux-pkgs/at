@@ -4,7 +4,7 @@
 #
 Name     : at
 Version  : 3.1.20
-Release  : 12
+Release  : 13
 URL      : http://localhost/cgit/projects/at/snapshot/at-3.1.20.tar.bz2
 Source0  : http://localhost/cgit/projects/at/snapshot/at-3.1.20.tar.bz2
 Source1  : atd.service
@@ -82,6 +82,7 @@ setuid components for the at package.
 
 %prep
 %setup -q -n at-3.1.20
+cd %{_builddir}/at-3.1.20
 %patch1 -p1
 
 %build
@@ -89,14 +90,14 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1571440703
+export SOURCE_DATE_EPOCH=1604881448
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
 export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static --with-jobdir=/var/spool --with-atspool=/var/spool/atspool
 make
@@ -109,7 +110,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make TEST_VERBOSE=1 test
 
 %install
-export SOURCE_DATE_EPOCH=1571440703
+export SOURCE_DATE_EPOCH=1604881448
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/at
 cp %{_builddir}/at-3.1.20/COPYING %{buildroot}/usr/share/package-licenses/at/4d1d37f306ed270cda5b2741fac3abf0a7b012e5
